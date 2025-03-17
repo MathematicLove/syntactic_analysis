@@ -68,7 +68,7 @@ executable syntactic-analysis
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.17.2.1
+    build-depends:    base >= 4.14.1.0 && < 5
 
     -- Directories containing source files.
     hs-source-dirs:   app
