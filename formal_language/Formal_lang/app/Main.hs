@@ -99,7 +99,7 @@ separateComments (x:xs) =
 
 setup :: Window -> UI ()
 setup window = do
-  return window # set title "Haskell UI"
+  return window # set title "HAAASKEEEEEELLLLLLL"
 
   inputBox <- UI.textarea
                 # set (attr "rows") "10"

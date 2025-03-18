@@ -46,7 +46,7 @@ checkNonLatinForNonComment = concatMap f
     f t =
       let lx = tokenLexeme t
       in if any (\c-> isAlpha c && not(isLatin c)) lx
-         then ["Недопустимые символы вне комментария: " ++ show lx]
+         then ["Можно только символы ASCII!!!: " ]
          else []
 
 isLatin :: Char -> Bool
@@ -55,14 +55,31 @@ isLatin c = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
 stripComments :: String -> String
 stripComments = id
 
+checkVariableStartsWithNumber :: [Token] -> [String]
+checkVariableStartsWithNumber [] = []
+checkVariableStartsWithNumber (TReal _ : TIdentifier _ : _) =
+  ["Переменная не может начинатся с числа!"]
+checkVariableStartsWithNumber (_:ts) = checkVariableStartsWithNumber ts
+
+checkMaxConsecutive :: [Token] -> [String]
+checkMaxConsecutive [] = []
+checkMaxConsecutive (t:ts)
+  | isComment t = checkMaxConsecutive ts
+  | length (tokenLexeme t) > 16 =
+      ("Слишком много символов подряд: Можно до 16!" ) : checkMaxConsecutive ts
+  | otherwise = checkMaxConsecutive ts
+
 lexer :: String -> ([Token],[String])
 lexer input =
   let (ts, es) = lexInternal input
   in if not (null es)
        then (ts, es)
        else
-         let e2 = checkNonLatinForNonComment ts
-         in (ts, e2)
+         let e1 = checkNonLatinForNonComment ts
+             e2 = checkVariableStartsWithNumber ts
+             e3 = checkMaxConsecutive ts
+         in (ts, e1 ++ e2 ++ e3)
+
 
 lexInternal :: String -> ([Token],[String])
 lexInternal [] = ([],[])
