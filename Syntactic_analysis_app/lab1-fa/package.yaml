@@ -24,6 +24,7 @@ dependencies:
 - threepenny-gui
 - random
 - QuickCheck
+- containers
 
 ghc-options:
 - -Wall
